@@ -85,12 +85,14 @@ public class UserController {
         User user = userService.getUserByEmail(email);
 
         // Create default admin if not exists
-        if (user == null && email.equals("ankushpandit2003@gmail.com")) {
+        // Use your email
+        if (user == null && email.equals("admin@xyz.com")) {  
             user = new User();
             user.setName("Admin");
             user.setEmail(email);
             user.setMobile("0000000000");
-            user.setPassword(passwordEncoder.encode("admin"));
+            // Use your Password
+            user.setPassword(passwordEncoder.encode("pass"));
             user.setPhotoPath("/images/userLogo.jpg");
             userService.saveUser(user);
         }

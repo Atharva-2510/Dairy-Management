@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Print Bill</title>
+    <style>
+        /* Add styles to format the printable page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            margin: 10px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        // JavaScript function to trigger printing
+        function printPage() {
+            window.print();
+        }
+    </script>
+</head>
+<body>
+    <div>
+        
+
+        <table>
+            <tr>
+                <th>Date</th>
+                <td th:text="${bill.date}"></td>
+            </tr>
+            <tr>
+                <th>Item</th>
+                <td th:text="${bill.item}"></td>
+            </tr>
+            <tr>
+                <th>Quantity</th>
+                <td th:text="${bill.qty}"></td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td th:text="${bill.price}"></td>
+            </tr>
+            <tr>
+                <th>GST</th>
+                <td th:text="${bill.gst}"></td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td th:text="${bill.total}"></td>
+            </tr>
+            <tr>
+                <th>Paid Amount</th>
+                <td th:text="${bill.paidAmount}"></td>
+            </tr>
+            <tr>
+                <th>Balance Due</th>
+                <td th:text="${bill.balanceDue}"></td>
+            </tr>
+        </table>
+
+        <button class="btn" onclick="printPage()">Print Bill</button>
+    </div>
+</body>
+</html>

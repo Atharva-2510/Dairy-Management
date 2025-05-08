@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<!-- FontAwesome for Icons -->
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+	rel="stylesheet">
+
+<!-- Chart.js for Data Visualization -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+.chart-container {
+	width: 400px; /* Medium size */
+	height: 400px; /* Medium size */
+	margin: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* General Styles */
+body {
+	font-family: 'Poppins', sans-serif;
+	background-color: #f4f4f4;
+}
+
+/* Navbar */
+.navbar {
+	height: 70px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar */
+.sidebar {
+	width: 250px;
+	position: fixed;
+	height: 100vh;
+	background: #343a40;
+	color: #ffffff;
+	padding-top: 20px;
+}
+
+.sidebar a {
+	color: #ffffff;
+	text-decoration: none;
+	padding: 12px 20px;
+	display: block;
+	font-size: 16px;
+	transition: background 0.3s ease;
+}
+
+.sidebar a:hover {
+	background-color: #495057;
+	border-left: 5px solid #007bff;
+}
+
+/* Content */
+.content {
+	margin-left: 250px;
+	padding: 80px 20px;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+	padding: 20px;
+	border-radius: 8px;
+	color: white;
+	font-size: 18px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.card-blue {
+	background: #007bff;
+}
+
+.card-green {
+	background: #28a745;
+}
+
+.card-orange {
+	background: #fd7e14;
+}
+
+.card-red {
+	background: #dc3545;
+}
+
+.card-purple {
+	background: #6f42c1;
+}
+
+.card-teal {
+	background: #20c997;
+}
+
+.card-dark {
+	background: #343a40;
+}
+
+.dashboard-card i {
+	font-size: 30px;
+	opacity: 0.8;
+}
+
+/* Profile Image */
+.profile-img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 2px solid white;
+}
+
+/* Chart Container */
+.chart-container {
+	width: 100%;
+	max-width: 700px;
+	margin: auto;
+	padding: 20px;
+}
+
+@media ( max-width : 991px) {
+	.sidebar {
+		width: 200px;
+	}
+	.content {
+		margin-left: 200px;
+	}
+}
+</style>
+<style>
+/* Reset and Body Styling */
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+	background-color: #f8f9fa; /* Light background */
+	overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Navbar Styling */
+.navbar {
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	height: 70px; /* Increased navbar height */
+}
+
+/* Make the navbar fixed at the top */
+.navbar.fixed-top {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1030; /* Ensures it's above other content */
+}
+
+/* Sidebar Styling */
+.menu {
+	width: 250px;
+	height: 100vh;
+	position: fixed;
+	top: 56px; /* To avoid overlap with the fixed navbar */
+	left: 0; /* Explicitly position the sidebar to the left */
+	background-color: #343a40;
+	padding-top: 20px;
+	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.menu a {
+	color: #ffffff;
+	text-decoration: none;
+	padding: 15px 20px;
+	display: block;
+	font-size: 16px;
+	transition: background-color 0.3s;
+}
+
+.menu a:hover {
+	background-color: #495057;
+	border-left: 5px solid #007bff; /* Highlight with a blue border */
+}
+
+.menu i {
+	margin-right: 10px;
+}
+
+.dropdown-menu {
+	background-color: #343a40;
+	padding: 0;
+}
+
+.dropdown-item {
+	color: #ffffff;
+}
+
+.dropdown-item:hover {
+	background-color: #495057;
+}
+
+/* Content Styling */
+.content {
+	margin-left: 250px;
+	padding: 80px 20px 20px 20px;
+	background-color: #ffffff;
+	min-height: 100vh;
+	box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.content h1 {
+	font-size: 28px;
+	color: #343a40;
+	margin-bottom: 20px;
+}
+
+/* Profile Image Styling */
+.profile-img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 3px solid white;
+}
+
+/* Navbar Brand Styling */
+.navbar-brand {
+	font-size: 20px;
+	font-weight: bold;
+	margin-left: 20px;
+	/* Added margin-left to move it a little from the left */
+}
+
+.navbar .dropdown-menu {
+	min-width: 200px;
+}
+
+.navbar .dropdown-menu a {
+	font-size: 14px;
+	color: #343a40;
+}
+
+.navbar .dropdown-menu a:hover {
+	background-color: #f8f9fa;
+}
+
+/* Modal styles for profile */
+.modal-content {
+	max-width: 500px;
+}
+
+/* For smaller screens, adjust navbar and sidebar */
+@media ( max-width : 991px) {
+	.menu {
+		width: 200px;
+		transform: translateX(-250px); /* Initially hide the menu */
+	}
+	.content {
+		margin-left: 0;
+	}
+	.navbar-toggler {
+		display: block;
+	}
+}
+
+/* For extra small screens, make the menu visible when toggled */
+@media ( max-width : 767px) {
+	.menu {
+		transform: translateX(-100%);
+		/* Completely hide the menu by default */
+	}
+	.menu.show {
+		transform: translateX(0); /* Show menu on toggle */
+	}
+	.content {
+		margin-left: 0;
+	}
+
+	/* Stack profile and logout button vertically */
+	.navbar-right {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.navbar-right img {
+		margin-bottom: 10px;
+		/* Add space between profile image and logout button */
+	}
+	.navbar-right a {
+		margin-top: 5px; /* Add margin to the logout button */
+	}
+}
+</style>
+<style>
+@import
+	url("https://uwhealth.github.io/Nu-Connect/uconnect_assets/css/main.css")
+	;
+
+.wrapper {
+	padding: 3rem 1.5rem;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.st0 {
+	fill: #D7DDE5;
+}
+
+.st1, .knob_data {
+	fill: #2EAB6F;
+	color: #2EAB6F;
+}
+
+.graph {
+	width: 80%;
+	display: table;
+	margin: 0 auto 0;
+	position: relative;
+	text-align: center;
+	height: 12.5rem;
+}
+
+.graph_media {
+	max-height: 12rem;
+}
+
+.graph_data, .knob_data {
+	font-size: 3rem;
+}
+
+.graph_data {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.card_division {
+	border-top: 1px solid #D7DDE5;
+	padding: 0;
+}
+
+.card_body {
+	background-image: linear-gradient(#ededed 1px, transparent 1px),
+		linear-gradient(90deg, #ededed 1px, transparent 1px);
+	background-size: 9px 9px;
+}
+
+.card_full {
+	max-height: none;
+	height: auto;
+}
+
+.card_more_button {
+	display: block;
+	text-align: center;
+	font-size: 1.5rem;
+	line-height: 1.1;
+	transition: transform .12s ease-out;
+}
+
+.card_more_button {
+	border-radius: 0;
+	border-left: 0;
+	border-right: 0;
+	border-bottom-color: #D7DDE5;
+	border-top-color: #D7DDE5;
+	background-color: #fff;
+}
+
+.card_more_button:after {
+	content: '\e629';
+}
+
+.card_more_content {
+	display: none;
+	font-size: .865rem;
+	line-height: 1.5;
+	padding: .75rem;
+}
+
+.stats {
+	width: 100%;
+	margin-bottom: -2px;
+	height: 5.75rem;
+	display: table;
+}
+
+.stats_row>.stats_item {
+	border-left: 1px solid #D7DDE5;
+	padding: .75rem 1.5rem;
+	overflow: hidden;
+	display: table-cell;
+	vertical-align: middle;
+	height: 100%;
+}
+
+.stats_row>.stats_item:first-child {
+	border-left: 0;
+}
+
+.stats_row:after {
+	content: ' ';
+	display: table;
+	clear: both;
+}
+
+.stats_item_number {
+	white-space: nowrap;
+	font-size: 2.25rem;
+	line-height: 2.5rem;
+
+	before
+	{
+	display
+	:
+	none;
+}
+
+}
+.txt_success {
+	color: #2EAB6F;
+}
+
+.txt_warn {
+	color: #DDC728;
+}
+
+.txt_smaller {
+	font-size: .75em;
+}
+
+.flipY {
+	transform: scaleY(-1);
+	border-bottom-color: #fff;
+}
+
+.txt_faded {
+	opacity: .65;
+}
+</style>
+</head>
+<body>
+	<!-- Navbar Section -->
+	<nav
+		class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top gap-5 ">
+		<div>
+			<a class="navbar-brand" href="#">Shree Datta Godavari Dairy</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		</div>
+		<div class="collapse navbar-collapse justify-content-end me-2 gap-2"
+			id="navbarNav">
+			<img th:src="@{${user.photoPath}}" alt="Profile" class="profile-img"
+				data-bs-toggle="modal" data-bs-target="#profileModal"
+				onerror="this.onerror=null; this.src='/images/userLogo.jpg';"
+				style="margin-right: 2px;" /> <span th:text="${user.name}"
+				class="text-white"></span> <a href="/logout"
+				class="btn btn-outline-light btn-secondary ms-1">Logout</a>
+		</div>
+
+	</nav>
+
+
+	<div class="container">
+		<!-- Scrollable Sidebar -->
+		<div class="menu" id="sidebar"
+			style="overflow-y: auto; max-height: 100vh;">
+			<!-- Dashboard Link -->
+			<a href="/dashboard"><i class="fas fa-tachometer-alt"></i>
+				Dashboard</a> <a href="#" data-bs-toggle="collapse"
+				data-bs-target="#BiLLMenu" aria-expanded="false"
+				aria-controls="BillMenu"> <i class="fa-solid fa-wallet"></i>
+				Sales & Bills
+			</a>
+			<div id="BiLLMenu" class="collapse ms-4">
+				<a href="/createBill"><i class="fas fa-plus-circle"></i> Create
+					Bill</a> <a href="/listBill"><i class="fas fa-list"></i> List Bills</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#PaymentMenu"
+				aria-expanded="false" aria-controls="PaymentMenu"> <i
+				class="fa-solid fa-indian-rupee-sign"></i> Payments
+			</a>
+			<div id="PaymentMenu" class="collapse ms-4">
+				<a href="/payments/form"><i class="fas fa-plus-circle"></i> Add
+					Transactions</a> <a href="/payments/list"><i class="fas fa-list"></i>
+					View Transactions</a>
+			</div>
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#companyMenu"
+				aria-expanded="false" aria-controls="companyMenu"><i
+				class="fas fa-building"></i> company's</a>
+			<div id="companyMenu" class="collapse ms-4">
+				<a href="/companies/new"><i class="fas fa-plus-circle"></i> Add
+					Company's</a> <a href="/companies"><i class="fas fa-list"></i> List
+					company's</a>
+			</div>
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#unitMenu"
+				aria-expanded="false" aria-controls="unitMenu"><i
+				class="fas fa-box"></i> Units</a>
+			<div id="unitMenu" class="collapse ms-4">
+				<a href="/units/new"><i class="fas fa-plus-circle"></i> Add
+					Units</a> <a href="/units"><i class="fas fa-list"></i> List Units</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#ProductMenu"
+				aria-expanded="false" aria-controls="ProductMenu"><i
+				class="fa-brands fa-product-hunt"></i> Products </a>
+			<div id="ProductMenu" class="collapse ms-4">
+				<a href="/products/new"><i class="fas fa-plus-circle"></i> Add
+					Products</a> <a href="/products"><i class="fas fa-list"></i> List
+					Products</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#stock"
+				aria-expanded="false" aria-controls="stock"> <i
+				class="fa-solid fa-circle-check"></i>Stocks
+			</a>
+			<div id="stock" class="collapse ms-4">
+				<a href="/stockForm"><i class="fas fa-plus-circle"></i>Add
+					Stocks</a> <a href="/stockList"><i class="fas fa-list"></i>Stocks
+					List</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse"
+				data-bs-target="#wholesalerMenu" aria-expanded="false"
+				aria-controls="wholesalerMenu"><i class="fas fa-truck"></i>
+				Wholesalers</a>
+			<div id="wholesalerMenu" class="collapse ms-4">
+				<a href="/wholesalers/add"><i class="fas fa-plus-circle"></i>
+					Add Wholesalers</a> <a href="/wholesalers/list"><i
+					class="fas fa-list"></i> List Wholesalers</a>
+			</div>
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#retailerMenu"
+				aria-expanded="false" aria-controls="retailerMenu"><i
+				class="fas fa-store"></i> Retailers</a>
+			<div id="retailerMenu" class="collapse ms-4">
+				<a href="/retailers/add"><i class="fas fa-plus-circle"></i> Add
+					Retailers</a> <a href="/retailers/list"><i class="fas fa-list"></i>
+					List Retailers</a>
+			</div>
+
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#ReportMenu"
+				aria-expanded="false" aria-controls="PaymentMenu"> <i
+				class="fa-solid fa-book"></i> Reports
+			</a>
+			<div id="ReportMenu" class="collapse ms-4">
+				<a href="/customers"><i class="fa-solid fa-book-open"></i>
+					Customer Reports </a> <a href="/retailers"><i
+					class="fa-solid fa-book-open"></i> Retailer Reports</a> <a
+					href="/wholesalers"><i class="fa-solid fa-book-open"></i>
+					Wholesaler Reports</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#expensesMenu"
+				aria-expanded="false" aria-controls="expensesMenu"> <i
+				class="fa-solid fa-money-check-dollar"></i> Expenses
+			</a>
+			<div id="expensesMenu" class="collapse ms-4">
+				<a href="/employee-expenses"><i class="fa-solid fa-user"></i> Emp
+					expenses </a> <a href="/other-expenses"><i
+					class="fa-solid fa-money-bill"></i> Other expenses</a> <a
+					href="/total-expenses"><i class="fa-solid fa-book-open"></i> Total
+					expenses</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#expensesMenu"
+				aria-expanded="false" aria-controls="expensesMenu"> </a>
+			<div id="expensesMenu" class="collapse ms-4">
+				<a href="/customers"> </a> <a href="/retailers"> </a> <a
+					href="/wholesalers"> </a>
+			</div>
+
+		</div>
+
+
+		<!-- Content -->
+		<div class="content">
+			<br>
+
+			<!-- Dashboard Cards -->
+			<!-- Dashboard Cards -->
+<div class="row g-3">
+    <div class="col-md-4">
+        <a href="/companies" style="text-decoration: none; color: white;">
+            <div class="dashboard-card card-blue">
+                <span>Companies</span>
+                <i class="fas fa-building"></i>
+                <span th:text="${totalCompanies}"></span>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="/products" style="text-decoration: none; color: white;">
+            <div class="dashboard-card card-green">
+                <span>Products</span>
+                <i class="fa-brands fa-product-hunt"></i>
+                <span id="totalProducts" th:text="${totalProducts}"></span>
+            </div>
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var totalProducts = parseInt(document.getElementById("totalProducts").innerText);
+            if (totalProducts < 10) {
+                alert("⚠️ Warning: Product stock is low! Only " + totalProducts + " left.");
+            }
+        });
+    </script>
+
+    <div class="col-md-4">
+        <a href="/listBill" style="text-decoration: none; color: white;">
+            <div class="dashboard-card card-orange">
+                <span>Bills</span>
+                <i class="fa-solid fa-wallet"></i>
+                <span th:text="${totalBills}"></span>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="/payments/list" style="text-decoration: none; color: white;">
+            <div class="dashboard-card card-red">
+                <span>Payments</span>
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+                <span th:text="${totalPayments}"></span>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="/wholesalers/list" style="text-decoration: none; color: white;">
+            <div class="dashboard-card card-purple">
+                <span>Wholesalers</span>
+                <i class="fa-solid fa-truck"></i>
+                <span th:text="${totalWholesalers}"></span>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="/retailers/list" style="text-decoration: none; color: white;">
+            <div class="dashboard-card card-teal">
+                <span>Retailers</span>
+                <i class="fa-solid fa-store"></i>
+                <span th:text="${totalRetailers}"></span>
+            </div>
+        </a>
+    </div>
+</div>
+			<!-- Chart -->
+			<div class="chart-container mt-4">
+				<canvas id="dashboardChart"></canvas>
+			</div>
+
+			<!-- Recent Transactions Section -->
+			<div class="mt-4">
+				<!-- Completed vs Incomplete Transactions Chart -->
+				<div class="chart-container mt-4">
+					<h2>Transaction Status</h2>
+					<canvas id="transactionChart"></canvas>
+				</div>
+				<br>
+				<h2>Recent Transactions</h2>
+				<table class="table table-bordered">
+					<thead>
+						<tr class="text-center">
+							<th>Sr No.</th>
+							<th>Bill ID</th>
+							<th>Amount</th>
+							<th>Paid Amount</th>
+							<th>Due Amount</th>
+							<th>Payment Method</th>
+							<th>Payment Status</th>
+							<th>Payment Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="payment, iter : ${latestTransactions}">
+							<td th:text="${iter.index + 1}"></td>
+							<td th:text="${payment.billId}"></td>
+							<td th:text="${payment.amount}"></td>
+							<td th:text="${payment.paidAmount}"></td>
+							<td th:text="${payment.dueAmount}"></td>
+							<td th:text="${payment.paymentMethod}"></td>
+							<td><span
+								th:classappend="${payment.dueAmount == 0} ? 'badge bg-success' : 'badge bg-danger'"
+								th:text="${payment.dueAmount == 0} ? 'Complete' : 'Incomplete'">
+							</span></td>
+							<td th:text="${payment.paymentDate}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<script th:inline="javascript">
+				var completedTransactions = /*[[${completedTransactions}]]*/0;
+				var incompleteTransactions = /*[[${incompleteTransactions}]]*/0;
+
+				const ctxTransaction = document.getElementById(
+						'transactionChart').getContext('2d');
+				new Chart(ctxTransaction, {
+					type : 'pie',
+					data : {
+						labels : [ 'Completed Transactions',
+								'Incomplete Transactions' ],
+						datasets : [ {
+							data : [ completedTransactions,
+									incompleteTransactions ],
+							backgroundColor : [ '#28a745', '#dc3545' ]
+						} ]
+					},
+					options : {
+						responsive : true,
+						maintainAspectRatio : false,
+						plugins : {
+							legend : {
+								position : 'bottom',
+							}
+						}
+					}
+				});
+			</script>
+
+			<script th:inline="javascript">
+				var totalCompanies = /*[[${totalCompanies}]]*/0;
+				var totalProducts = /*[[${totalProducts}]]*/0;
+				var totalBills = /*[[${totalBills}]]*/0;
+				var totalPayments = /*[[${totalPayments}]]*/0;
+				var totalWholesalers = /*[[${totalWholesalers}]]*/0;
+				var totalRetailers = /*[[${totalRetailers}]]*/0;
+
+				const ctx = document.getElementById('dashboardChart')
+						.getContext('2d');
+				new Chart(ctx, {
+					type : 'bar',
+					data : {
+						labels : [ 'Companies', 'Products', 'Bills',
+								'Payments', 'Wholesalers', 'Retailers' ],
+						datasets : [ {
+							label : 'Statistics',
+							data : [ totalCompanies, totalProducts, totalBills,
+									totalPayments, totalWholesalers,
+									totalRetailers ],
+							backgroundColor : [ 'blue', 'green', 'orange',
+									'red', 'purple', 'teal' ]
+						} ]
+					}
+				});
+			</script>
+		</div>
+
+
+
+		</section>
+		<!-- Modal for Profile -->
+		<div class="modal fade" id="profileModal" tabindex="-1" role="dialog"
+			aria-labelledby="profileModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+
+					<div class="modal-header">
+						<h5 class="modal-title" id="profileModalLabel">Profile
+							Details</h5>
+						<button type="button" class="close" data-bs-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+
+					<div class="modal-body">
+						<p>
+							<strong>Name:</strong> <span th:text="${user.name}">User
+								Name</span>
+						</p>
+						<p>
+							<strong>Email:</strong> <span th:text="${user.email}">User
+								Email</span>
+						</p>
+						<p>
+							<strong>Mobile:</strong> <span th:text="${user.mobile}">User
+								Mobile</span>
+						</p>
+						<p>
+							<strong>Photo:</strong>
+						</p>
+						<img
+							th:src="@{${user.photoPath != null ? user.photoPath : '/images/userLogo.jpg'}}"
+							alt="Profile" class="img-fluid"
+							style="width: 250px; height: 160px;"
+							onerror="this.onerror=null; this.src='/images/userLogo.jpg';" />
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<a th:href="@{/edit-profile}" class="btn btn-success">Update
+							Profile</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			$(function() {
+				$('.card_more_button').on('click', function() {
+					$(this).closest('.card').toggleClass('card_full');
+					$(this).siblings('.card_more_content').slideToggle('fast');
+					$(this).toggleClass('flipY');
+				})
+			}(jQuery));
+		</script>
+		<!-- Scripts -->
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				const sidebar = document.getElementById("sidebar");
+				const toggleButton = document.querySelector(".navbar-toggler");
+
+				toggleButton.addEventListener("click", function() {
+					sidebar.classList.toggle("show");
+				});
+			});
+		</script>
+		<script>
+			async
+			function fetchCounts() {
+				const response = await
+				fetch('/api/wholesalers/count');
+				const wholesalerCount = await
+				response.json();
+
+				// Update the chart with wholesaler data
+				updateChart(wholesalerCount);
+			}
+
+			function updateChart(wholesalerCount) {
+				const ctx = document.getElementById('myChart').getContext('2d');
+				const myChart = new Chart(ctx, {
+					type : 'bar',
+					data : {
+						labels : [ 'Companies', 'Products', 'Bills',
+								'Payments', 'Wholesaler' ],
+						datasets : [ {
+							label : 'Statistics',
+							data : [ 2, 1, 1, 6, wholesalerCount ], // Use the fetched wholesaler count
+							backgroundColor : [ 'blue', 'green', 'orange',
+									'red', 'purple' ],
+						} ]
+					},
+					options : {
+						responsive : true,
+						scales : {
+							y : {
+								beginAtZero : true
+							}
+						}
+					}
+				});
+			}
+
+			fetchCounts(); // Fetch data when the page loads
+		</script>
+</body>
+</html>

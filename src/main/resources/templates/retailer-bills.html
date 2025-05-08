@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Dairy Dashboard</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+	rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<!-- Link to external CSS for additional styling -->
+<style>
+/* Reset and Body Styling */
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+	background-color: #f8f9fa; /* Light background */
+}
+
+/* Navbar Styling */
+.navbar {
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	height: 70px; /* Increased navbar height */
+}
+
+/* Make the navbar fixed at the top */
+.navbar.fixed-top {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1030; /* Ensures it's above other content */
+}
+
+/* Sidebar Styling */
+.menu {
+	width: 250px;
+	height: 100vh;
+	position: fixed;
+	top: 56px; /* To avoid overlap with the fixed navbar */
+	left: 0; /* Explicitly position the sidebar to the left */
+	background-color: #343a40;
+	padding-top: 20px;
+	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.menu a {
+	color: #ffffff;
+	text-decoration: none;
+	padding: 15px 20px;
+	display: block;
+	font-size: 16px;
+	transition: background-color 0.3s;
+}
+
+.menu a:hover {
+	background-color: #495057;
+	border-left: 5px solid #007bff; /* Highlight with a blue border */
+}
+
+/* Content Styling */
+.content {
+	margin-left: 250px;
+	padding: 80px 20px 20px 20px;
+	/* Added top padding to offset navbar height */
+	background-color: #ffffff;
+	min-height: 100vh;
+	box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.content h1 {
+	font-size: 28px;
+	color: #343a40;
+	margin-bottom: 20px;
+}
+
+/* Profile Image Styling */
+.profile-img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-right: 10px;
+}
+
+/* Navbar Brand Styling */
+.navbar-brand {
+	font-size: 20px;
+	font-weight: bold;
+	margin-left: 20px;
+	/* Added margin-left to move it a little from the left */
+}
+
+.navbar .dropdown-menu {
+	min-width: 200px;
+}
+
+.navbar .dropdown-menu a {
+	font-size: 14px;
+	color: #343a40;
+}
+
+.navbar .dropdown-menu a:hover {
+	background-color: #f8f9fa;
+}
+
+/* For smaller screens, adjust navbar and sidebar */
+@media ( max-width : 991px) {
+	.menu {
+		width: 200px;
+		transform: translateX(-250px); /* Initially hide the menu */
+	}
+	.content {
+		margin-left: 0;
+	}
+	.navbar-toggler {
+		display: block;
+	}
+}
+
+/* For extra small screens, make the menu visible when toggled */
+@media ( max-width : 767px) {
+	.menu {
+		transform: translateX(-100%);
+		/* Completely hide the menu by default */
+	}
+	.menu.show {
+		transform: translateX(0); /* Show menu on toggle */
+	}
+	.content {
+		margin-left: 0;
+	}
+
+	/* Stack profile and logout button vertically */
+	.navbar-right {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.navbar-right img {
+		margin-bottom: 10px;
+		/* Add space between profile image and logout button */
+	}
+	.navbar-right a {
+		margin-top: 5px; /* Add margin to the logout button */
+	}
+}
+.btnn {
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            background-color: #007BFF;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        .btn-print {
+            background-color: rgb(255, 128, 0);
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+        }
+
+/* Table Styling */
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+table th, table td {
+	text-align: center;
+	padding: 10px;
+}
+
+table th {
+	background-color: #343a40;
+	color: #ffffff;
+}
+
+table tr:nth-child(even) {
+	background-color: #f9f9f9;
+}
+
+table tr:hover {
+	background-color: #f1f1f1;
+}
+</style>
+</head>
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+		<a class="navbar-brand" href="#">Shree Datta Godavari Dairy</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+			data-bs-target="#navbarNav" aria-controls="navbarNav"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<div class="ms-auto d-flex align-items-center"
+				style="margin-right: 20px;">
+				<a href="/logout" class="btn btn-outline-light ml-3">Logout</a>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Sidebar -->
+	<div class="menu" id="sidebar"
+			style="overflow-y: auto; max-height: 100vh;">
+			<!-- Dashboard Link -->
+			<a href="/dashboard"><i class="fas fa-tachometer-alt"></i>
+				Dashboard</a> <a href="#" data-bs-toggle="collapse"
+				data-bs-target="#BiLLMenu" aria-expanded="false"
+				aria-controls="BillMenu"> <i class="fa-solid fa-wallet"></i>
+				Sales & Bills
+			</a>
+			<div id="BiLLMenu" class="collapse ms-4">
+				<a href="/createBill"><i class="fas fa-plus-circle"></i> Create
+					Bill</a> <a href="/listBill"><i class="fas fa-list"></i> List Bills</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#PaymentMenu"
+				aria-expanded="false" aria-controls="PaymentMenu"> <i
+				class="fa-solid fa-indian-rupee-sign"></i> Payments
+			</a>
+			<div id="PaymentMenu" class="collapse ms-4">
+				<a href="/payments/form"><i class="fas fa-plus-circle"></i> Add
+					Transactions</a> <a href="/payments/list"><i class="fas fa-list"></i>
+					View Transactions</a>
+			</div>
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#companyMenu"
+				aria-expanded="false" aria-controls="companyMenu"><i
+				class="fas fa-building"></i> company's</a>
+			<div id="companyMenu" class="collapse ms-4">
+				<a href="/companies/new"><i class="fas fa-plus-circle"></i> Add
+					Company's</a> <a href="/companies"><i class="fas fa-list"></i> List
+					company's</a>
+			</div>
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#unitMenu"
+				aria-expanded="false" aria-controls="unitMenu"><i
+				class="fas fa-box"></i> Units</a>
+			<div id="unitMenu" class="collapse ms-4">
+				<a href="/units/new"><i class="fas fa-plus-circle"></i> Add
+					Units</a> <a href="/units"><i class="fas fa-list"></i> List Units</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#ProductMenu"
+				aria-expanded="false" aria-controls="ProductMenu"><i
+				class="fa-brands fa-product-hunt"></i> Products </a>
+			<div id="ProductMenu" class="collapse ms-4">
+				<a href="/products/new"><i class="fas fa-plus-circle"></i> Add
+					Products</a> <a href="/products"><i class="fas fa-list"></i> List
+					Products</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#stock"
+				aria-expanded="false" aria-controls="stock"> <i
+				class="fa-solid fa-circle-check"></i>Stocks
+			</a>
+			<div id="stock" class="collapse ms-4">
+				<a href="/stockForm"><i class="fas fa-plus-circle"></i>Add
+					Stocks</a> <a href="/stockList"><i class="fas fa-list"></i>Stocks
+					List</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse"
+				data-bs-target="#wholesalerMenu" aria-expanded="false"
+				aria-controls="wholesalerMenu"><i class="fas fa-truck"></i>
+				Wholesalers</a>
+			<div id="wholesalerMenu" class="collapse ms-4">
+				<a href="/wholesalers/add"><i class="fas fa-plus-circle"></i>
+					Add Wholesalers</a> <a href="/wholesalers/list"><i
+					class="fas fa-list"></i> List Wholesalers</a>
+			</div>
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#retailerMenu"
+				aria-expanded="false" aria-controls="retailerMenu"><i
+				class="fas fa-store"></i> Retailers</a>
+			<div id="retailerMenu" class="collapse ms-4">
+				<a href="/retailers/add"><i class="fas fa-plus-circle"></i> Add
+					Retailers</a> <a href="/retailers/list"><i class="fas fa-list"></i>
+					List Retailers</a>
+			</div>
+
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#ReportMenu"
+				aria-expanded="false" aria-controls="PaymentMenu"> <i
+				class="fa-solid fa-book"></i> Reports
+			</a>
+			<div id="ReportMenu" class="collapse ms-4">
+				<a href="/customers"><i class="fa-solid fa-book-open"></i>
+					Customer Reports </a> <a href="/retailers"><i
+					class="fa-solid fa-book-open"></i> Retailer Reports</a> <a
+					href="/wholesalers"><i class="fa-solid fa-book-open"></i>
+					Wholesaler Reports</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#expensesMenu"
+				aria-expanded="false" aria-controls="expensesMenu"> <i
+				class="fa-solid fa-money-check-dollar"></i> Expenses
+			</a>
+			<div id="expensesMenu" class="collapse ms-4">
+				<a href="/employee-expenses"><i class="fa-solid fa-user"></i> Emp
+					expenses </a> <a href="/other-expenses"><i
+					class="fa-solid fa-money-bill"></i> Other expenses</a> <a
+					href="/total-expenses"><i class="fa-solid fa-book-open"></i> Total
+					expenses</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#expensesMenu"
+				aria-expanded="false" aria-controls="expensesMenu"> </a>
+			<div id="expensesMenu" class="collapse ms-4">
+				<a href="/customers"> </a> <a href="/retailers"> </a> <a
+					href="/wholesalers"> </a>
+			</div>
+
+		</div>
+<div class="content">
+    <center><h3 style="padding: 10px">RETAILER BILLS</h3></center>
+
+    <div class="container">
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <input type="text" id="searchBox" class="form-control" placeholder="Search Retailer by Name..." onkeyup="filterTable()" style="width: 250px;">
+            
+            <label for="fromDateSearchBox">From:</label>
+            <input type="date" id="fromDateSearchBox" class="form-control" oninput="filterTable()" style="width: 150px;">
+            
+            <label for="toDateSearchBox">To:</label>
+            <input type="date" id="toDateSearchBox" class="form-control" oninput="filterTable()" style="width: 150px;">
+            
+            <!-- Print All Bills Button -->
+            <button id="printBtn" class="btn btn-primary" onclick="printFilteredBills()">Print All Bills</button>
+            <button class="btn btn-secondary" onclick="refreshTable()">Refresh</button>
+        </div>
+        <br>
+
+        <table border="1" id="retailerTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Total</th>
+                    <th>Paid Amount</th>
+                    <th>Balance Due</th>
+                    <th>Date</th>
+                    <th class="action-column">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="bill : ${bills}">
+                    <td th:text="${bill.id}"></td>
+                    <td th:text="${bill.fullName}"></td>
+                    <td th:text="${bill.total}"></td>
+                    <td th:text="${bill.paidAmount}"></td>
+                    <td th:text="${bill.balanceDue}"></td>
+                    <td th:text="${bill.date}"></td>
+                    <td class="action-column">
+                        <!-- Delete Button -->
+                        <form th:action="@{/delete-bill/{id}(id=${bill.id})}" method="post" style="display:inline;">
+                            <button type="submit" class="btnn btn-delete" onclick="return confirm('Are you sure you want to delete this bill?')">Delete</button>
+                        </form>
+
+                        <!-- Print Button -->
+                        <a th:href="@{/PrintBill/{id}(id=${bill.id})}" class="btnn btn-print" target="_blank">Print</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function filterTable() {
+    let nameInput = document.getElementById("searchBox").value.toLowerCase();
+    let fromDateInput = document.getElementById("fromDateSearchBox").value;
+    let toDateInput = document.getElementById("toDateSearchBox").value;
+    let table = document.getElementById("retailerTable");
+    let rows = table.getElementsByTagName("tr");
+
+    // Filter rows based on user input (name and date)
+    for (let i = 1; i < rows.length; i++) {
+        let nameCell = rows[i].getElementsByTagName("td")[1]; // Name column
+        let dateCell = rows[i].getElementsByTagName("td")[5]; // Date column
+
+        if (nameCell && dateCell) {
+            let name = nameCell.textContent || nameCell.innerText;
+            let date = dateCell.textContent || dateCell.innerText;
+
+            let nameMatch = name.toLowerCase().includes(nameInput);
+            let dateMatch = true;
+
+            if (fromDateInput && toDateInput) {
+                dateMatch = (date >= fromDateInput && date <= toDateInput);
+            } else if (fromDateInput) {
+                dateMatch = (date >= fromDateInput);
+            } else if (toDateInput) {
+                dateMatch = (date <= toDateInput);
+            }
+
+            rows[i].style.display = nameMatch && dateMatch ? "" : "none";
+        }
+    }
+}
+
+function printFilteredBills() {
+    let table = document.getElementById("retailerTable");
+    let clonedTable = table.cloneNode(true);
+
+    // Remove hidden rows and action column
+    let rows = clonedTable.getElementsByTagName("tr");
+    for (let i = rows.length - 1; i > 0; i--) {
+        if (rows[i].style.display === "none") {
+            rows[i].remove();
+        }
+    }
+
+    // Remove action column from the cloned table
+    let actionColumns = clonedTable.getElementsByClassName("action-column");
+    while (actionColumns.length > 0) {
+        actionColumns[0].remove();
+    }
+
+    // Print the filtered data
+    let newWindow = window.open("", "", "width=800,height=600");
+    newWindow.document.write("<html><head><title>Filtered Bills</title></head><body>");
+    newWindow.document.write("<h2>Filtered Retailer Bills</h2>");
+    newWindow.document.write(clonedTable.outerHTML);
+    newWindow.document.write("</body></html>");
+    newWindow.document.close();
+    newWindow.print();
+}
+
+function refreshTable() {
+    location.reload(); // Reloads the page to reset filters
+}
+</script>
+
+	<script	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

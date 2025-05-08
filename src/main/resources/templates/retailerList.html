@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Body Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa; /* Light background */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            height: 70px; /* Increased navbar height */
+        }
+
+        /* Make the navbar fixed at the top */
+        .navbar.fixed-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1030; /* Ensures it's above other content */
+        }
+
+        /* Sidebar Styling */
+        .menu {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 56px; /* To avoid overlap with the fixed navbar */
+            left: 0; /* Explicitly position the sidebar to the left */
+            background-color: #343a40;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .menu a:hover {
+            background-color: #495057;
+            border-left: 5px solid #007bff; /* Highlight with a blue border */
+        }
+
+        /* Content Styling */
+        .content {
+            margin-left: 250px;
+            padding: 80px 20px 20px 20px;
+            background-color: #ffffff;
+            min-height: 100vh;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .content h1 {
+            font-size: 28px;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        /* Profile Image Styling */
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        /* Navbar Brand Styling */
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 20px; /* Added margin-left to move it a little from the left */
+        }
+
+        /* Modal styles for profile */
+        .modal-content {
+            max-width: 500px;
+        }
+
+        /* For smaller screens, adjust navbar and sidebar */
+        @media (max-width: 991px) {
+            .menu {
+                width: 200px;
+                transform: translateX(-250px); /* Initially hide the menu */
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .navbar-toggler {
+                display: block;
+            }
+        }
+
+        /* For extra small screens, make the menu visible when toggled */
+        @media (max-width: 767px) {
+            .menu {
+                transform: translateX(-100%); /* Completely hide the menu by default */
+            }
+
+            .menu.show {
+                transform: translateX(0); /* Show menu on toggle */
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            /* Stack profile and logout button vertically */
+            .navbar-right {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .navbar-right img {
+                margin-bottom: 10px; /* Add space between profile image and logout button */
+            }
+
+            .navbar-right a {
+                margin-top: 5px; /* Add margin to the logout button */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="/dashboard">Shree Datta Godavari Dairy</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="ms-auto d-flex align-items-center" style="margin-right: 20px;">
+                <a href="/logout" class="btn btn-outline-light ml-3">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+   <div class="menu" id="sidebar"
+			style="overflow-y: auto; max-height: 100vh;">
+			<!-- Dashboard Link -->
+			<a href="/dashboard"><i class="fas fa-tachometer-alt"></i>
+				Dashboard</a> <a href="#" data-bs-toggle="collapse"
+				data-bs-target="#BiLLMenu" aria-expanded="false"
+				aria-controls="BillMenu"> <i class="fa-solid fa-wallet"></i>
+				Sales & Bills
+			</a>
+			<div id="BiLLMenu" class="collapse ms-4">
+				<a href="/createBill"><i class="fas fa-plus-circle"></i> Create
+					Bill</a> <a href="/listBill"><i class="fas fa-list"></i> List Bills</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#PaymentMenu"
+				aria-expanded="false" aria-controls="PaymentMenu"> <i
+				class="fa-solid fa-indian-rupee-sign"></i> Payments
+			</a>
+			<div id="PaymentMenu" class="collapse ms-4">
+				<a href="/payments/form"><i class="fas fa-plus-circle"></i> Add
+					Transactions</a> <a href="/payments/list"><i class="fas fa-list"></i>
+					View Transactions</a>
+			</div>
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#companyMenu"
+				aria-expanded="false" aria-controls="companyMenu"><i
+				class="fas fa-building"></i> company's</a>
+			<div id="companyMenu" class="collapse ms-4">
+				<a href="/companies/new"><i class="fas fa-plus-circle"></i> Add
+					Company's</a> <a href="/companies"><i class="fas fa-list"></i> List
+					company's</a>
+			</div>
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#unitMenu"
+				aria-expanded="false" aria-controls="unitMenu"><i
+				class="fas fa-box"></i> Units</a>
+			<div id="unitMenu" class="collapse ms-4">
+				<a href="/units/new"><i class="fas fa-plus-circle"></i> Add
+					Units</a> <a href="/units"><i class="fas fa-list"></i> List Units</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#ProductMenu"
+				aria-expanded="false" aria-controls="ProductMenu"><i
+				class="fa-brands fa-product-hunt"></i> Products </a>
+			<div id="ProductMenu" class="collapse ms-4">
+				<a href="/products/new"><i class="fas fa-plus-circle"></i> Add
+					Products</a> <a href="/products"><i class="fas fa-list"></i> List
+					Products</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#stock"
+				aria-expanded="false" aria-controls="stock"> <i
+				class="fa-solid fa-circle-check"></i>Stocks
+			</a>
+			<div id="stock" class="collapse ms-4">
+				<a href="/stockForm"><i class="fas fa-plus-circle"></i>Add
+					Stocks</a> <a href="/stockList"><i class="fas fa-list"></i>Stocks
+					List</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse"
+				data-bs-target="#wholesalerMenu" aria-expanded="false"
+				aria-controls="wholesalerMenu"><i class="fas fa-truck"></i>
+				Wholesalers</a>
+			<div id="wholesalerMenu" class="collapse ms-4">
+				<a href="/wholesalers/add"><i class="fas fa-plus-circle"></i>
+					Add Wholesalers</a> <a href="/wholesalers/list"><i
+					class="fas fa-list"></i> List Wholesalers</a>
+			</div>
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#retailerMenu"
+				aria-expanded="false" aria-controls="retailerMenu"><i
+				class="fas fa-store"></i> Retailers</a>
+			<div id="retailerMenu" class="collapse ms-4">
+				<a href="/retailers/add"><i class="fas fa-plus-circle"></i> Add
+					Retailers</a> <a href="/retailers/list"><i class="fas fa-list"></i>
+					List Retailers</a>
+			</div>
+
+
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#ReportMenu"
+				aria-expanded="false" aria-controls="PaymentMenu"> <i
+				class="fa-solid fa-book"></i> Reports
+			</a>
+			<div id="ReportMenu" class="collapse ms-4">
+				<a href="/customers"><i class="fa-solid fa-book-open"></i>
+					Customer Reports </a> <a href="/retailers"><i
+					class="fa-solid fa-book-open"></i> Retailer Reports</a> <a
+					href="/wholesalers"><i class="fa-solid fa-book-open"></i>
+					Wholesaler Reports</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#expensesMenu"
+				aria-expanded="false" aria-controls="expensesMenu"> <i
+				class="fa-solid fa-money-check-dollar"></i> Expenses
+			</a>
+			<div id="expensesMenu" class="collapse ms-4">
+				<a href="/employee-expenses"><i class="fa-solid fa-user"></i> Emp
+					expenses </a> <a href="/other-expenses"><i
+					class="fa-solid fa-money-bill"></i> Other expenses</a> <a
+					href="/total-expenses"><i class="fa-solid fa-book-open"></i> Total
+					expenses</a>
+			</div>
+
+			<a href="#" data-bs-toggle="collapse" data-bs-target="#expensesMenu"
+				aria-expanded="false" aria-controls="expensesMenu"> </a>
+			<div id="expensesMenu" class="collapse ms-4">
+				<a href="/customers"> </a> <a href="/retailers"> </a> <a
+					href="/wholesalers"> </a>
+			</div>
+
+		</div>
+
+			   <div class="content">
+    <center><h3 style="padding: 10px">RETAILER LIST</h3></center>
+
+    <div class="container">
+        <!-- Search Input -->
+        <input type="text" id="searchBox" class="form-control mb-3" placeholder="Search Retailer by Name...">
+
+        <table class="table table-bordered table-hover" id="retailerTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Photo</th>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Vehicle No</th>
+                    <th>Aadhar</th>
+                    <th>License</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="retailer : ${retailers}">
+                    <td th:text="${retailer.id}"></td>
+
+                    <!-- Passport Photo -->
+                    <td>
+                        <img th:if="${retailer.passportPhotoPath}" 
+                             th:src="@{'/retailers/uploads/' + ${retailer.passportPhotoPath}}" 
+                             alt="Photo" 
+                             style="width: 60px; height: 60px; object-fit: cover;" />
+                        <span th:if="${retailer.passportPhotoPath == null}">-</span>
+                    </td>
+
+                    <td th:text="${retailer.name ?: '-'}"></td>
+                    <td th:text="${retailer.mobileNo ?: '-'}"></td>
+                    <td th:text="${retailer.email ?: '-'}"></td>
+                    <td th:text="${retailer.vehicleNo ?: '-'}"></td>
+
+                    <!-- Aadhar Card Link -->
+                    <td>
+                        <a th:if="${retailer.adharCardPath}" 
+                           th:href="@{'/retailers/uploads/' + ${retailer.adharCardPath}}" 
+                           target="_blank">View</a>
+                        <span th:if="${retailer.adharCardPath == null}">-</span>
+                    </td>
+
+                    <!-- Licence Copy Link -->
+                    <td>
+                        <a th:if="${retailer.licenceCopyPath}" 
+                           th:href="@{'/retailers/uploads/' + ${retailer.licenceCopyPath}}" 
+                           target="_blank">View</a>
+                        <span th:if="${retailer.licenceCopyPath == null}">-</span>
+                    </td>
+
+                    <td>
+                        <a th:href="@{/retailers/edit/{id}(id=${retailer.id})}" class="btn btn-warning btn-sm">Edit</a>
+                        <a th:href="@{/retailers/delete/{id}(id=${retailer.id})}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure you want to delete this retailer?');">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center mt-3">
+            <a href="/retailers/add" class="btn btn-success">Add Retailer</a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById("searchBox").addEventListener("keyup", function () {
+    let input = this.value.toLowerCase();
+    let rows = document.querySelectorAll("#retailerTable tbody tr");
+
+    rows.forEach(row => {
+        let nameCell = row.cells[2]; // Third column (Retailer Name)
+        let nameText = nameCell.textContent.toLowerCase();
+        
+        row.style.display = nameText.includes(input) ? "" : "none";
+    });
+});
+</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

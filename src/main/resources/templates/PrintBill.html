@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+      <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .para{
+            margin-top: 30px;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+        }
+
+        .container h1 {
+            text-align: center;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            padding: 10px;
+            text-align: left;
+            border: none; /* Invisible border */
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-bottom: 1px solid #ccc; /* Only bottom border for input */
+            outline: none;
+        }
+
+      
+
+        .stamp {
+
+           text-align: right;
+            margin-top: 50px;
+            margin-right: 90PX;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        @media print {
+            .container {
+                box-shadow: none;
+                border: none;
+            }
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Shree Datta Godavari Dairy</h1>
+        <p class="contact-info">
+            <i class="fa-solid fa-location-dot"></i> G-39, Vasant Market, Canada Corner, Nashik-5 &nbsp;
+            <i class="fa-solid fa-tty"></i> 0253-2570142
+        </p>
+
+        <table>
+            <tr>
+                <td><label>Bill No.</label> 
+                    <input type="text" th:value="${bill.billNo}"> <!-- Auto-fill billNo -->
+                </td>
+                <td><label>Customer Type</label>
+                    <input type="text" th:value="${bill.customerType}"> <!-- Auto-fill customerType -->
+                </td>
+                <td><label>Date</label>
+                    <input type="text" th:value="${bill.date}"> <!-- Auto-fill date -->
+                </td>
+            </tr>
+            <tr>
+                <td><label>Name</label> 
+                    <input type="text" th:value="${bill.fullName}"> <!-- Auto-fill fullName -->
+                </td>
+                <td><label>Mobile No.</label>
+                    <input type="text" th:value="${bill.mobileNumber}"> <!-- Auto-fill mobileNumber -->
+                </td>
+            </tr>
+        </table>
+
+        <br>
+
+        <table>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+            </tr>
+            <tr>
+                <td><input type="text" th:value="${bill.item}"> <!-- Auto-fill item name --></td>
+                <td><input type="text" th:value="${bill.qty}"> <!-- Auto-fill qty --></td>
+                <td><input type="text" th:value="${bill.price}"> <!-- Auto-fill price --></td>
+                <td><input type="text" th:value="${bill.subtotal}"> <!-- Auto-fill subtotal --></td>
+            </tr>
+        </table>
+
+        <br>
+
+        <table>
+            <tr>
+                <td>
+                    <label>SGST</label> 
+                    <input type="text" th:value="${bill.sgst}"> <!-- Auto-fill SGST -->
+                    <br><br>
+                    <label>Paid Amount</label>
+                    <input type="text" th:value="${bill.paidAmount}"> <!-- Auto-fill paidAmount -->
+                    <br><br>
+                    <label>Due Amount</label>
+                    <input type="text" th:value="${bill.balanceDue}"> <!-- Auto-fill balanceDue -->
+                </td>
+                <td>
+                    <label>CGST</label> 
+                    <input type="text" th:value="${bill.cgst}"> <!-- Auto-fill CGST -->
+                    <br><br>
+                    <label>Discount</label>
+                    <input type="text" th:value="${bill.discount}"> <!-- Auto-fill discount -->
+                    <br><br>
+                    <label>Total</label>
+                    <input type="text" th:value="${bill.total}"> <!-- Auto-fill total -->
+                </td>
+            </tr>
+        </table>
+
+        <div class="stamp">
+            Signature
+        </div>
+
+        <center>
+            <p class="para">Thank you...! Please visit again</p>
+        </center>
+    </div>
+   <script>
+    window.addEventListener('load', function() {
+        window.print();
+    });
+</script>
+
+    
+</body>
+</html>
